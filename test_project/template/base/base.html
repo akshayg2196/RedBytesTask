@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+{% block nav %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Readbytes</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+      
+      </li>
+      
+    </ul>
+    
+    <ul class="nav navbar-nav navbar-right">
+         {% if request.user.is_authenticated %}
+<!--        <li><a ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>-->
+      <li><a ><span class="glyphicon glyphicon-log-in"></span> {{ request.user }}</a></li>
+        <li><a href="/logout">Logout</a></li>
+        {% else %}
+      <li><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        {% endif %}
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+{% block body %}
+<form class="form" enctype="multipart/form-data" id="Add_product" method="post">
+    {% csrf_token %}
+    {% load static %}
+    <div  class="div1 row" style="
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px #000;
+            margin: 20px 10px 10px 35px;
+            padding: 25px 50px 50px 50px;
+            height: auto;
+            width: 95%;">
+        <h1 class="text-center">Add Product</h1><br><br>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <div class="form-group" align="center">
+                <img  id="img" src="#" alt="your image" /><br> <br>
+                <input type='file' onchange="readURL(this);" name="img" />
+            </div>
+           <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" aria-describedby="emailHelp" name="name" placeholder="Name">
+                
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="price">
+            </div>
+            <div class="form-group" align="center">
+              <button type="submit" id="submit" class="btn btn-success" value="">Submit</button>
+          </div>
+        
+        </div>
+        
+        <div class="col-sm-3"></div>
+
+    </div>
+</form>
+
+<script>
+    
+    $("#submit").click(function(){
+   
+       
+        var form_data = new FormData(document.getElementById("Add_product"));
+        
+      
+         $.ajax({
+                url: '{% url "add_product-list"%}',
+                type: 'post',
+                dataType: 'json',
+                
+                data: form_data,
+                processData: false,
+                contentType: false,
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                 //contentType: 'application/json; charset=UTF-8',
+                success: function(data) {
+               
+                    swal({title: "Done", text: "Product Added Successfully", icon: "success",timer:1500
+                                                        })
+                    
+            },
+
+
+            error: function (data) {
+                
+                console.log(data);
+            },
+        });
+    });
+
+</script>
+{% endblock %}
+</body>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(200);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+</html>

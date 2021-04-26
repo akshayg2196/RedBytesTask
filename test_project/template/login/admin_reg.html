@@ -1,0 +1,136 @@
+{% extends "user/dashboard.html"%}
+{% block body%}
+{% load static %}
+
+<head>
+
+    <style>
+        .note
+{
+    text-align: center;
+    height: 80px;
+    background: -webkit-linear-gradient(left, #0072ff, #8811c5);
+    color: #fff;
+    font-weight: bold;
+    line-height: 80px;
+}
+.form-content
+{
+    padding: 5%;
+    border: 1px solid #ced4da;
+    margin-bottom: 2%;
+}
+.form-control{
+    border-radius:1.5rem;
+}
+.btnSubmit
+{
+    border:none;
+    border-radius:1.5rem;
+    padding: 1%;
+    width: 20%;
+    cursor: pointer;
+    background: #0062cc;
+    color: #fff;
+}
+    </style>
+</head>
+<body>
+<form action="" enctype="multipart/form-data" id="addproduct" method="post">
+   <div class="container register-form mt-5">
+            <div class="form">
+                <div class="note">
+                    <p>Admin Registration</p>
+                </div>
+
+                <div class="form-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="First Name " id="first_name" name="first_name" value=""/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Phone Number " id="mobNo" name="mobile" value=""/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Last Name " id="last_name"  name="last_name" value=""/>
+                            </div>
+                            <div class="form-group">
+                                <input type="date" class="form-control" placeholder="DOB *" id="dob"  value=""/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Email *" id="email" name="email" value=""/>
+                                
+                            </div>
+                             <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password *" id="password" value=""/>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="username *" name="username" id="username" value=""/>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Confirm Password *" name="password" id="confPassword" value=""/>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <button type="button" id="register" class="btnSubmit">Submit</button>
+                </div>
+            </div>
+        </div>
+    
+    
+</form>
+
+</body>
+
+
+<script>
+    $("#register").click(function(){
+  
+       
+        var dob= $("#dob").val()
+        console.log(dob)
+        
+       
+        var form_data = new FormData(document.getElementById("addproduct"));
+        form_data.append("Admin.dob",dob)
+        form_data.append("role",1)
+        
+      
+         $.ajax({
+                url: '{% url "adminReg-list"%}',
+                type: 'post',
+                dataType: 'json',
+                
+                data: form_data,
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                processData: false,
+                contentType: false,
+                 //contentType: 'application/json; charset=UTF-8',
+                success: function(data) {
+               
+                   swal({title: "Done", text: "Admin Registration Successfully", icon: "success",timer:1500
+                                                        })
+            },
+
+
+            error: function (data) {
+                
+                console.log(data);
+            },
+        });
+    });
+</script>
+
+
+
+{% endblock %}

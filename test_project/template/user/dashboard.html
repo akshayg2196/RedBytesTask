@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+   {% block style %}
+    <style>
+        body {
+    background: #F5F1EE;
+    font-family: 'Roboto', sans-serif
+}
+
+.card {
+    width: 250px;
+    border-radius: 10px
+}
+
+.card-img-top {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px
+}
+
+span.text-muted {
+    font-size: 12px
+}
+
+small.text-muted {
+    font-size: 8px
+}
+
+h5.mb-0 {
+    font-size: 1rem
+}
+
+small.ghj {
+    font-size: 9px
+}
+
+.mid {
+    background: #ECEDF1
+}
+
+h6.ml-1 {
+    font-size: 13px
+}
+
+small.key {
+    text-decoration: underline;
+    font-size: 9px;
+    cursor: pointer
+}
+
+.btn-danger {
+    color: #FFCBD2
+}
+
+.btn-danger:focus {
+    box-shadow: none
+}
+    </style>
+    
+    {% endblock %}
+  
+ <title>ReadBytes</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    
+    <script crossorigin="anonymous"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+   
+    
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" rel="stylesheet">
+    <script src="//unpkg.com/xlsx/dist/xlsx.full.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    
+   
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+   
+
+   
+    
+    
+    
+
+    
+    
+   
+    
+    
+  
+    
+    
+</head>
+<body>
+{% block nav %}
+
+<body>
+
+<nav class="navbar  bg-dark">
+    <div class="navbar-header">
+      <a style="color:white" class="navbar-brand" href="#">Redbytes Task</a>
+    </div>
+  <ul class="navbar-nav">
+  
+  </ul>
+    <ul class="nav navbar-nav navbar-right">
+         {% if request.user.is_authenticated %}
+<!--        <li><a ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>-->
+      <li style="color:white"><a ><span class="glyphicon glyphicon-log-in"></span> {{ request.user }}</a></li>
+        <li style="padding-left:15px;">
+                    <a href="{% url 'cart' %}" >
+                        <i class="fa fa-shopping-cart mr-2" style="font-size:25px;color:#ffc107;">Cart
+                        </i>
+                    <a  id="c_total" style=" font-size:15px;">{{cart.count}}
+                    </a>
+                        </a>
+                </li>
+        <li ><a style="color:white" href="/logout">Logout</a></li>
+        {% else %}
+      <li style="color:white"><a href="/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li style="color:white"><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        
+        {% endif %}
+    </ul>
+</nav>
+
+{% endblock %}
+{% block body %}
+<h1 align="center" class="mb-5">Products</h1>
+<form class="form" enctype="multipart/form-data" id="cart_data" method="post">
+    
+    <input type="text" hidden id="auth" value="{{request.user.is_authenticated}}">
+    {% csrf_token %}
+    {% load static %}
+    
+<div class=" row card-deck">
+    {% if All_product%}
+    {% for i in All_product%}
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="card">
+        <img src="{{i.img.url}}"  class="card-img-top" alt="...">
+            <div class="card-body">
+                  <h5 class="card-title">{{i.name}}</h5>
+                  <p class="card-text">{{i.price}}</p>
+                  <a class="btn btn-success addtocartdata"  data-id="{{i.id}}"    >Add To Cart</a>
+            </div>
+        </div>
+  
+      </div>
+ </div>
+     {% endfor %}
+        {% endif %}
+</div>
+    
+        
+    </div>
+</div>
+</form>
+
+
+{% endblock %}
+</body>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(200);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<script>
+
+$('.addtocartdata').on('click', function(){
+var is_authenticated=$('#auth').val()
+console.log(typeof(is_authenticated))
+ if(is_authenticated=='True'){
+    id = $(this).attr('data-id')
+    var form_data = new FormData(document.getElementById("cart_data"));
+        user={{request.user.id}}
+        form_data.append("product",id)
+        form_data.append("user",user)
+        form_data.append("qty",1)
+       
+      
+             console.log(id)
+             $.ajax({
+             type:'post',
+             url:'{% url "cart-list"%}',
+             processData: false,
+             contentType: false,
+             data:form_data,
+             
+             
+             success: function(data){
+                   swal({title: "Done", text: "Product Added Successfully", icon: "success",timer:1500
+                                                        })
+                    
+                    
+                },
+                 error: function (data) {
+                
+                console.log(data);
+            },
+             
+            });
+    }else{
+        window.location = "{% url 'login' %}";
+   }
+ 
+});
+
+</script>
+</html>
