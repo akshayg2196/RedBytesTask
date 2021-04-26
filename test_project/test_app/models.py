@@ -9,6 +9,12 @@ class User(AbstractUser):
         (1, 'vendor'),
         (2, 'user'),
     )
+
+
+    email = models.EmailField(max_length=50, unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
 
 
